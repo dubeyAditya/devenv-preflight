@@ -15,9 +15,18 @@ server.registerTool(
   {
     description:
       'Scan the local developer environment and return a structured JSON snapshot of installed toolchains, package managers, version managers, VCS tools, and infra tools.',
+    inputSchema: {
+      noCache: z.boolean().optional().describe('Skip the disk cache and force a fresh scan'),
+      cacheTTL: z
+        .number()
+        .int()
+        .min(0)
+        .optional()
+        .describe('Cache TTL in seconds. 0 disables write. Default 60.'),
+    },
   },
-  async () => {
-    const snapshot = await scanEnvironment();
+  async ({ noCache, cacheTTL }) => {
+    const snapshot = await scanEnvironment({ noCache, cacheTTL });
     return {
       content: [{ type: 'text', text: JSON.stringify(snapshot, null, 2) }],
     };

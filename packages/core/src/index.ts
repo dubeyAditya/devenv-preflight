@@ -46,5 +46,8 @@ export { gitDetector } from './detectors/git-detector.js';
 // Scanner
 export { scanEnvironment } from './scanner.js';
 
+// Cache
+export { SnapshotCache, computeCacheKey } from './cache/snapshot-cache.js';
+
 // Validator
 export { loadStack, validateStack, recommendFixes } from './validators/validator.js';

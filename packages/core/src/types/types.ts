@@ -251,6 +251,10 @@ export interface ScanOptions {
     allowedTiers?: DetectionTier[];
     /** Explicit per-tool permission overrides */
     permissions?: Record<string, PermissionStatus>;
+    /** Cache TTL in seconds. 0 disables write. Default: 60 */
+    cacheTTL?: number;
+    /** Skip cache read on entry. Cache is still written on exit unless cacheTTL is 0. Default: false */
+    noCache?: boolean;
 }
 
 // =============================================================================

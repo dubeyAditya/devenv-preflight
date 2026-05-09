@@ -7,6 +7,9 @@ import type {
 } from './types/types.js';
 import { SCHEMA_VERSION } from './types/types.js';
 import { ALL_DETECTORS } from './detectors/detector-registry.js';
+import { SnapshotCache, computeCacheKey } from './cache/snapshot-cache.js';
+
+const DEFAULT_CACHE_TTL_SECONDS = 60;
 
 const CATEGORY_TO_FIELD: Record<string, keyof EnvironmentSnapshot> = {
   'language': 'toolchains',
@@ -25,6 +28,17 @@ function getSystemInfo(): { os: Platform; arch: string; shell: string } {
 export async function scanEnvironment(options?: ScanOptions): Promise<EnvironmentSnapshot> {
   const allowedTiers = options?.allowedTiers ?? ['passive'];
   const permissions = options?.permissions ?? {};
+  const ttl = options?.cacheTTL ?? DEFAULT_CACHE_TTL_SECONDS;
+  const noCache = options?.noCache ?? false;
+
+  const cache = new SnapshotCache();
+  const cacheKey = computeCacheKey(options);
+
+  if (!noCache) {
+    const cached = cache.get(cacheKey);
+    if (cached) return cached;
+  }
+
   const system = getSystemInfo();
 
   const snapshot: EnvironmentSnapshot = {
@@ -58,6 +72,8 @@ export async function scanEnvironment(options?: ScanOptions): Promise<Environmen
       (snapshot[field] as Record<string, ToolInfo>)[name] = info;
     }
   }
+
+  cache.set(cacheKey, snapshot, ttl);
 
   return snapshot;
 }

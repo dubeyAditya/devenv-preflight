@@ -14,8 +14,13 @@ program
   .command('scan')
   .description('Scan the local environment and output a JSON snapshot')
   .option('--pretty', 'Pretty-print JSON output')
-  .action(async (opts: { pretty?: boolean }) => {
-    const snapshot = await scanEnvironment();
+  .option('--no-cache', 'Skip the disk cache and force a fresh scan')
+  .option('--ttl <seconds>', 'Cache TTL in seconds (0 disables write)', (v) => parseInt(v, 10))
+  .action(async (opts: { pretty?: boolean; cache?: boolean; ttl?: number }) => {
+    const snapshot = await scanEnvironment({
+      noCache: opts.cache === false,
+      cacheTTL: opts.ttl,
+    });
     const output = opts.pretty
       ? JSON.stringify(snapshot, null, 2)
       : JSON.stringify(snapshot);
