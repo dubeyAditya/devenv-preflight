@@ -30,7 +30,7 @@ describe('validateStack', () => {
     const stack = await loadStack('node-fullstack');
     const report = validateStack(snapshot, stack);
 
-    expect(report.meta.schemaVersion).toBe('0.1.0');
+    expect(report.meta.schemaVersion).toBe('0.2.0');
     expect(report.target.stack).toBe('node-fullstack');
     expect(typeof report.compatible).toBe('boolean');
     expect(Array.isArray(report.missing)).toBe(true);
@@ -98,7 +98,7 @@ describe('recommendFixes', () => {
     };
 
     const plan = recommendFixes(report);
-    expect(plan.meta.schemaVersion).toBe('0.1.0');
+    expect(plan.meta.schemaVersion).toBe('0.2.0');
     expect(plan.fixes).toHaveLength(2);
     expect(plan.fixes[0].tool).toBe('java');
     expect(plan.fixes[1].tool).toBe('node');

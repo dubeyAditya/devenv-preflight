@@ -48,7 +48,7 @@ export interface Meta {
 }
 
 /** Current schema version constant */
-export const SCHEMA_VERSION = '0.1.0';
+export const SCHEMA_VERSION = '0.2.0';
 
 // =============================================================================
 // Tool Detection
@@ -96,6 +96,8 @@ export interface EnvironmentSnapshot {
     versionManagers: Record<string, ToolInfo>;
     vcs: Record<string, ToolInfo>;
     infra: Record<string, ToolInfo>;
+    /** Auth/context info, populated when contextual or privileged tier is enabled */
+    contexts: Record<string, ToolContext>;
 }
 
 // =============================================================================

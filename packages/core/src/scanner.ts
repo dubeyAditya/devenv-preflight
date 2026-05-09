@@ -49,28 +49,44 @@ export async function scanEnvironment(options?: ScanOptions): Promise<Environmen
     versionManagers: {},
     vcs: {},
     infra: {},
+    contexts: {},
   };
 
-  const eligible = ALL_DETECTORS.filter((d) => {
-    if (!allowedTiers.includes(d.tier)) return false;
-    const perm = permissions[d.name];
-    if (perm === 'denied') return false;
-    if (d.tier !== 'passive' && perm !== 'granted') return false;
-    return true;
-  });
+  const passiveAllowed = allowedTiers.includes('passive');
 
-  const results = await Promise.all(
-    eligible.map(async (detector) => {
-      const info = await detector.detect(system.os);
-      return { name: detector.name, category: detector.category, info };
+  const passiveResults = passiveAllowed
+    ? await Promise.all(
+        ALL_DETECTORS.filter((d) => permissions[d.name] !== 'denied').map(async (detector) => {
+          const info = await detector.detect(system.os);
+          return { detector, info };
+        }),
+      )
+    : [];
+
+  for (const { detector, info } of passiveResults) {
+    const field = CATEGORY_TO_FIELD[detector.category];
+    if (field) {
+      (snapshot[field] as Record<string, ToolInfo>)[detector.name] = info;
+    }
+  }
+
+  const contextEligible = passiveResults.filter(
+    ({ detector, info }) =>
+      detector.detectContext &&
+      info.installed &&
+      allowedTiers.includes(detector.tier) &&
+      permissions[detector.name] === 'granted',
+  );
+
+  const contextResults = await Promise.all(
+    contextEligible.map(async ({ detector }) => {
+      const ctx = await detector.detectContext!(system.os);
+      return { name: detector.name, ctx };
     }),
   );
 
-  for (const { name, category, info } of results) {
-    const field = CATEGORY_TO_FIELD[category];
-    if (field) {
-      (snapshot[field] as Record<string, ToolInfo>)[name] = info;
-    }
+  for (const { name, ctx } of contextResults) {
+    if (ctx) snapshot.contexts[name] = ctx;
   }
 
   cache.set(cacheKey, snapshot, ttl);

@@ -6,13 +6,14 @@ import type { EnvironmentSnapshot } from '../src/types/types.js';
 
 function makeSnapshot(): EnvironmentSnapshot {
   return {
-    meta: { schemaVersion: '0.1.0', timestamp: '2026-05-09T00:00:00Z' },
+    meta: { schemaVersion: '0.2.0', timestamp: '2026-05-09T00:00:00Z' },
     system: { os: 'darwin', arch: 'arm64', shell: 'zsh' },
     packageManagers: {},
     toolchains: {},
     versionManagers: {},
     vcs: {},
     infra: {},
+    contexts: {},
   };
 }
 

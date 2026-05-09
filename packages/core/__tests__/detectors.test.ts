@@ -38,7 +38,8 @@ describe.each(ALL_DETECTORS.map((d) => [d.name, d]))('%s detector', (_name, dete
 
     expect(typeof info.installed).toBe('boolean');
     expect(info.category).toBe(detector.category);
-    expect(info.tier).toBe(detector.tier);
+    // detect() always runs at passive tier regardless of detector classification
+    expect(info.tier).toBe('passive');
 
     if (info.installed) {
       expect(typeof info.version).toBe('string');

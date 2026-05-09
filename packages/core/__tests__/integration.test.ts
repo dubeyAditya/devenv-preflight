@@ -10,7 +10,7 @@ describe('E2E pipeline: scan → validate → fix', () => {
   }, 15_000);
 
   it('produces a valid snapshot with meta', () => {
-    expect(snapshot.meta.schemaVersion).toBe('0.1.0');
+    expect(snapshot.meta.schemaVersion).toBe('0.2.0');
     expect(typeof snapshot.meta.timestamp).toBe('string');
   });
 
@@ -18,7 +18,7 @@ describe('E2E pipeline: scan → validate → fix', () => {
     const stack = await loadStack('node-fullstack');
     const report: CompatibilityReport = validateStack(snapshot, stack);
 
-    expect(report.meta.schemaVersion).toBe('0.1.0');
+    expect(report.meta.schemaVersion).toBe('0.2.0');
     expect(report.target.stack).toBe('node-fullstack');
     expect(typeof report.compatible).toBe('boolean');
     expect(Array.isArray(report.missing)).toBe(true);
@@ -26,7 +26,7 @@ describe('E2E pipeline: scan → validate → fix', () => {
     expect(Array.isArray(report.satisfied)).toBe(true);
 
     const plan: FixPlan = recommendFixes(report);
-    expect(plan.meta.schemaVersion).toBe('0.1.0');
+    expect(plan.meta.schemaVersion).toBe('0.2.0');
     expect(plan.target.stack).toBe('node-fullstack');
     expect(Array.isArray(plan.fixes)).toBe(true);
 

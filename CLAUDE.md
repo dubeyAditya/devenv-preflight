@@ -70,9 +70,9 @@ Every non-trivial feature follows this gate sequence. Do not write code until ea
 - **No IDE/tool metadata.** Never stage files or directories starting with `.` that are tool artifacts: `.cursor/`, `.claude/`, `.idea/`, `.vscode/`, `*.DS_Store`, etc. These belong in `.gitignore`.
 - **No large or generated files.** Never stage `dist/`, `node_modules/`, build artefacts, or binary blobs.
 - **Conventional Commits format.** Every commit message must follow `<type>(<scope>): <subject>` where type is one of `feat | fix | chore | refactor | test | docs | ci | perf`. Subject is imperative, ≤72 chars, no trailing period.
-- **Commit footer.** Always append the co-author trailer:
+- **Commit footer.** Always append the co-author trailer with the actual model used (e.g. `Claude Opus 4.7`, `Claude Sonnet 4.6`, `Claude Haiku 4.5`):
   ```
-  Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+  Co-Authored-By: Claude <model> <noreply@anthropic.com>
   ```
 - **Detailed body when needed.** For non-trivial changes include a blank-line-separated body explaining *why*, not *what*.
 

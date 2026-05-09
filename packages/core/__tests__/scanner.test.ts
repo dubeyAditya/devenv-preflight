@@ -9,7 +9,7 @@ describe('scanEnvironment', () => {
   }, 15_000);
 
   it('includes meta with schemaVersion and timestamp', () => {
-    expect(snapshot.meta.schemaVersion).toBe('0.1.0');
+    expect(snapshot.meta.schemaVersion).toBe('0.2.0');
     expect(typeof snapshot.meta.timestamp).toBe('string');
   });
 
