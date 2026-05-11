@@ -15,6 +15,12 @@ const commands: readonly DetectorCommand[] = [
     purpose: 'Read configured origin remote URL',
     tier: 'contextual',
   },
+  {
+    command: 'git',
+    args: ['push', '--dry-run'],
+    purpose: 'Verify push access to origin (dry run, no actual push)',
+    tier: 'privileged',
+  },
 ];
 
 function classifyRemote(url: string): 'ssh' | 'https' | 'git' | 'other' {
@@ -65,6 +71,31 @@ export const gitDetector: ToolDetector = {
       tool: 'git',
       authenticated: protocol === 'ssh' || protocol === 'https',
       metadata: { remoteUrl: url, protocol },
+    };
+  },
+
+  async detectPrivilegedContext(_platform: Platform): Promise<ToolContext | null> {
+    const result = await safeExec('git', ['push', '--dry-run']);
+    const combined = result.stderr + result.stdout;
+
+    let pushAccess: 'granted' | 'denied' | 'unknown';
+    if (result.exitCode === 0) {
+      pushAccess = 'granted';
+    } else if (
+      result.exitCode === 128 &&
+      (combined.includes('denied') ||
+        combined.includes('Authentication failed') ||
+        combined.includes('Permission'))
+    ) {
+      pushAccess = 'denied';
+    } else {
+      pushAccess = 'unknown';
+    }
+
+    return {
+      tool: 'git',
+      authenticated: pushAccess === 'granted',
+      metadata: { pushAccess },
     };
   },
 };

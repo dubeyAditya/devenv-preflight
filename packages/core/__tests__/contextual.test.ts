@@ -116,6 +116,71 @@ describe.each([
   });
 });
 
+describe('scanEnvironment — privileged tier', () => {
+  it('does not add pushAccess when privileged tier is not in allowedTiers', async () => {
+    const snap = await scanEnvironment({
+      noCache: true,
+      allowedTiers: ['passive', 'contextual'],
+      permissions: { git: 'granted' },
+    });
+    if (snap.contexts.git) {
+      expect(snap.contexts.git.metadata?.pushAccess).toBeUndefined();
+    }
+  }, 15_000);
+
+  it('does not run privileged detection without permission', async () => {
+    const snap = await scanEnvironment({
+      noCache: true,
+      allowedTiers: ['passive', 'contextual', 'privileged'],
+    });
+    expect(snap.contexts.git?.metadata?.pushAccess).toBeUndefined();
+  }, 15_000);
+
+  it('populates pushAccess when privileged tier and permission are both granted', async () => {
+    const snap = await scanEnvironment({
+      noCache: true,
+      allowedTiers: ['passive', 'contextual', 'privileged'],
+      permissions: { git: 'granted' },
+    });
+    if (snap.vcs.git?.installed) {
+      expect(snap.contexts.git).toBeDefined();
+      expect(['granted', 'denied', 'unknown']).toContain(snap.contexts.git!.metadata?.pushAccess);
+    }
+  }, 15_000);
+
+  it('merges privileged metadata into contextual context', async () => {
+    const snap = await scanEnvironment({
+      noCache: true,
+      allowedTiers: ['passive', 'contextual', 'privileged'],
+      permissions: { git: 'granted' },
+    });
+    if (snap.vcs.git?.installed) {
+      expect(snap.contexts.git!.metadata?.pushAccess).toBeDefined();
+      // contextual pass should also have populated protocol
+      expect(snap.contexts.git!.metadata?.protocol).toBeDefined();
+    }
+  }, 15_000);
+});
+
+describe('gitDetector.detectPrivilegedContext', () => {
+  it('implements detectPrivilegedContext', () => {
+    expect(typeof gitDetector.detectPrivilegedContext).toBe('function');
+  });
+
+  it('returns a ToolContext with pushAccess metadata', async () => {
+    const ctx = await gitDetector.detectPrivilegedContext!('darwin');
+    expect(ctx).not.toBeNull();
+    expect(ctx!.tool).toBe('git');
+    expect(['granted', 'denied', 'unknown']).toContain(ctx!.metadata?.pushAccess);
+  }, 15_000);
+
+  it('exposes privileged command in commands list', () => {
+    const privCmd = gitDetector.commands.find((c) => c.tier === 'privileged');
+    expect(privCmd).toBeDefined();
+    expect(privCmd!.args).toContain('--dry-run');
+  });
+});
+
 describe('npmDetector.detectContext', () => {
   it('exposes contextual command in commands list', () => {
     const ctxCommand = npmDetector.commands.find((c) => c.tier === 'contextual');

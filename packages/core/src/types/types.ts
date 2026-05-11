@@ -132,6 +132,9 @@ export interface ToolDetector {
 
     /** Run context detection (Phase 2+). Only if permission granted. */
     detectContext?(platform: Platform): Promise<ToolContext | null>;
+
+    /** Run privileged detection (Phase 2+). Only if privileged tier is allowed and permission granted. */
+    detectPrivilegedContext?(platform: Platform): Promise<ToolContext | null>;
 }
 
 /** Auth/context info for gated tools (Phase 2+) */

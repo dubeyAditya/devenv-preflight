@@ -1,7 +1,7 @@
 {
   "id": "agent-push-eval",
   "name": "Agent Push Evaluation",
-  "description": "Validates environment for AI agent code-push workflows",
+  "description": "Validates environment for AI agent code-push workflows. Enable privileged tier with permissions.git='granted' to also verify live push access via dry-run.",
   "requirements": [
     { "tool": "git", "versionRange": ">=2.30.0", "required": true },
     { "tool": "node", "versionRange": ">=18.0.0", "required": false },

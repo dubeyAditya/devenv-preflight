@@ -89,6 +89,35 @@ export async function scanEnvironment(options?: ScanOptions): Promise<Environmen
     if (ctx) snapshot.contexts[name] = ctx;
   }
 
+  const privilegedEligible = passiveResults.filter(
+    ({ detector, info }) =>
+      detector.detectPrivilegedContext &&
+      info.installed &&
+      allowedTiers.includes('privileged') &&
+      permissions[detector.name] === 'granted',
+  );
+
+  const privilegedResults = await Promise.all(
+    privilegedEligible.map(async ({ detector }) => {
+      const ctx = await detector.detectPrivilegedContext!(system.os);
+      return { name: detector.name, ctx };
+    }),
+  );
+
+  for (const { name, ctx } of privilegedResults) {
+    if (!ctx) continue;
+    const existing = snapshot.contexts[name];
+    if (existing) {
+      snapshot.contexts[name] = {
+        ...existing,
+        ...ctx,
+        metadata: { ...existing.metadata, ...ctx.metadata },
+      };
+    } else {
+      snapshot.contexts[name] = ctx;
+    }
+  }
+
   cache.set(cacheKey, snapshot, ttl);
 
   return snapshot;
