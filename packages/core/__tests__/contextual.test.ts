@@ -1,5 +1,14 @@
 import { scanEnvironment } from '../src/scanner';
-import { gitDetector, npmDetector } from '../src/index';
+import {
+  gitDetector,
+  npmDetector,
+  dockerDetector,
+  kubectlDetector,
+  awsDetector,
+  ghDetector,
+  glabDetector,
+} from '../src/index';
+import type { ToolDetector, ToolCategory, DetectionTier } from '../src/index';
 
 describe('scanEnvironment — contextual tier', () => {
   it('does not populate contexts when only passive tier is requested', async () => {
@@ -69,6 +78,41 @@ describe('gitDetector.detectContext', () => {
     expect(ctx).not.toBeNull();
     expect(ctx!.tool).toBe('git');
     expect(typeof ctx!.authenticated).toBe('boolean');
+  });
+});
+
+describe.each([
+  ['docker', dockerDetector, 'infra' as ToolCategory, 'contextual' as DetectionTier],
+  ['kubectl', kubectlDetector, 'infra' as ToolCategory, 'contextual' as DetectionTier],
+  ['aws', awsDetector, 'infra' as ToolCategory, 'contextual' as DetectionTier],
+  ['gh', ghDetector, 'vcs' as ToolCategory, 'contextual' as DetectionTier],
+  ['glab', glabDetector, 'vcs' as ToolCategory, 'contextual' as DetectionTier],
+])('%s detector', (name, detector: ToolDetector, category, tier) => {
+  it('declares the expected name and category', () => {
+    expect(detector.name).toBe(name);
+    expect(detector.category).toBe(category);
+    expect(detector.tier).toBe(tier);
+  });
+
+  it('exposes both passive and contextual commands', () => {
+    expect(detector.commands.some((c) => c.tier === 'passive')).toBe(true);
+    expect(detector.commands.some((c) => c.tier === 'contextual')).toBe(true);
+  });
+
+  it('detect() returns a clean installed:false shape when binary is absent', async () => {
+    const info = await detector.detect('darwin');
+    if (!info.installed) {
+      expect(info.version).toBeNull();
+      expect(info.path).toBeNull();
+      expect(info.category).toBe(category);
+      expect(info.tier).toBe('passive');
+    } else {
+      expect(typeof info.path).toBe('string');
+    }
+  }, 10_000);
+
+  it('detectContext is implemented', () => {
+    expect(typeof detector.detectContext).toBe('function');
   });
 });
 

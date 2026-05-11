@@ -4,8 +4,8 @@ import type { ToolInfo, Platform } from '../src/types/types';
 const platform: Platform = process.platform as Platform;
 
 describe('detector registry', () => {
-  it('exports 6 detectors', () => {
-    expect(ALL_DETECTORS).toHaveLength(6);
+  it('exports 11 detectors', () => {
+    expect(ALL_DETECTORS).toHaveLength(11);
   });
 
   it('each detector has unique name', () => {

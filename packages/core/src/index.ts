@@ -42,6 +42,11 @@ export { javaDetector } from './detectors/java-detector.js';
 export { npmDetector } from './detectors/npm-detector.js';
 export { brewDetector } from './detectors/brew-detector.js';
 export { gitDetector } from './detectors/git-detector.js';
+export { dockerDetector } from './detectors/docker-detector.js';
+export { kubectlDetector } from './detectors/kubectl-detector.js';
+export { awsDetector } from './detectors/aws-detector.js';
+export { ghDetector } from './detectors/gh-detector.js';
+export { glabDetector } from './detectors/glab-detector.js';
 
 // Scanner
 export { scanEnvironment } from './scanner.js';
