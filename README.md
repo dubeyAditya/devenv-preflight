@@ -6,6 +6,20 @@ Provides a structured JSON snapshot of a developer's local environment and valid
 
 ---
 
+## ⚠️ Token Cost Warning (Claude & LLM Users)
+
+This tool is designed to **minimize** token usage by pre-scanning your environment once instead of the agent discovering it through failed attempts.
+
+**However:** When using with Claude or other LLM agents:
+- **MCP tools (recommended):** ~1–5k tokens per scan/validate (direct tool calls)
+- **CLI fallback:** ~10–50k tokens per call (spawns process + Node.js startup overhead)
+
+**Make sure the MCP server is installed** via `node packages/setup/dist/index.js` to keep costs low. Without MCP, the agent will fall back to expensive CLI invocations.
+
+For Gemini Pro or similar providers with robust quota, this is less critical—but with Claude (metered billing), always ensure MCP is configured.
+
+---
+
 ## Why This Exists
 
 Every AI coding agent starts a session knowing nothing about your machine. Without preflight, the agent discovers the environment through failure:
