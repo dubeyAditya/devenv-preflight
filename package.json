@@ -1,0 +1,29 @@
+{
+  "name": "devenv-preflight",
+  "version": "0.1.0",
+  "private": true,
+  "description": "System-aware environment intelligence layer for AI coding agents",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "npm run build --workspaces",
+    "test": "jest --passWithNoTests",
+    "lint": "eslint 'packages/*/src/**/*.ts'",
+    "clean": "rm -rf packages/*/dist"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.4",
+    "@types/jest": "^29.5.0",
+    "@types/node": "^22.0.0",
+    "@typescript-eslint/eslint-plugin": "^8.0.0",
+    "@typescript-eslint/parser": "^8.0.0",
+    "eslint": "^9.0.0",
+    "jest": "^29.7.0",
+    "prettier": "^3.3.0",
+    "ts-jest": "^29.2.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.5.0",
+    "typescript-eslint": "^8.59.0"
+  }
+}

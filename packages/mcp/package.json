@@ -1,0 +1,14 @@
+{
+    "name": "@devenv-preflight/mcp",
+    "version": "0.1.0",
+    "description": "MCP server wrapper for DevEnv Preflight",
+    "main": "./dist/index.js",
+    "types": "./dist/index.d.ts",
+    "scripts": {
+        "build": "tsc -p tsconfig.json"
+    },
+    "dependencies": {
+        "@devenv-preflight/core": "*",
+        "@modelcontextprotocol/sdk": "^1.12.0"
+    }
+}

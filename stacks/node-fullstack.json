@@ -1,0 +1,10 @@
+{
+  "id": "node-fullstack",
+  "name": "Node.js Full-Stack",
+  "description": "Next.js / Express with npm and Git",
+  "requirements": [
+    { "tool": "node", "versionRange": ">=18.0.0", "required": true },
+    { "tool": "npm", "versionRange": ">=9.0.0", "required": true },
+    { "tool": "git", "versionRange": ">=2.30.0", "required": true }
+  ]
+}

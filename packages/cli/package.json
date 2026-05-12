@@ -1,0 +1,17 @@
+{
+    "name": "@devenv-preflight/cli",
+    "version": "0.1.0",
+    "description": "CLI wrapper for DevEnv Preflight",
+    "main": "./dist/index.js",
+    "types": "./dist/index.d.ts",
+    "bin": {
+        "devenv-preflight": "./dist/index.js"
+    },
+    "scripts": {
+        "build": "tsc -p tsconfig.json"
+    },
+    "dependencies": {
+        "@devenv-preflight/core": "*",
+        "commander": "^12.1.0"
+    }
+}

@@ -1,0 +1,10 @@
+{
+  "id": "spring-boot",
+  "name": "Spring Boot 3",
+  "description": "Java Spring Boot with Maven/Gradle",
+  "requirements": [
+    { "tool": "java", "versionRange": ">=17.0.0", "required": true },
+    { "tool": "git", "versionRange": ">=2.30.0", "required": true },
+    { "tool": "node", "versionRange": ">=18.0.0", "required": false }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+    "name": "@devenv-preflight/core",
+    "version": "0.1.0",
+    "description": "Core detectors, validators, and schema definitions for DevEnv Preflight",
+    "main": "./dist/index.js",
+    "types": "./dist/index.d.ts",
+    "scripts": {
+        "build": "tsc -p tsconfig.json"
+    },
+    "dependencies": {
+        "semver": "^7.6.0"
+    },
+    "devDependencies": {
+        "@types/semver": "^7.5.0"
+    }
+}
