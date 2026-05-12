@@ -2,7 +2,7 @@
     "mcpServers": {
         "devenv-preflight": {
             "command": "npx",
-            "args": ["-y", "@devenv-preflight/mcp"]
+            "args": ["-y", "@dubey_aditya/devenv-preflight-mcp"]
         }
     }
 }

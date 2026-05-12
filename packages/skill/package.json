@@ -1,8 +1,8 @@
 {
-    "name": "@devenv-preflight/skill",
+    "name": "@dubey_aditya/devenv-preflight-skill",
     "version": "0.2.0",
     "description": "Claude Code skill for DevEnv Preflight — scan and validate your local developer environment",
-    "private": false,
+    "private": true,
     "scripts": {
         "build": "echo 'skill package — no build step'"
     },

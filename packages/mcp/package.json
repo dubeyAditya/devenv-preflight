@@ -1,14 +1,31 @@
 {
-    "name": "@devenv-preflight/mcp",
-    "version": "0.1.0",
+    "name": "@dubey_aditya/devenv-preflight-mcp",
+    "version": "0.2.0",
     "description": "MCP server wrapper for DevEnv Preflight",
     "main": "./dist/index.js",
     "types": "./dist/index.d.ts",
+    "bin": {
+        "devenv-preflight-mcp": "./dist/index.js"
+    },
+    "files": [
+        "dist/**"
+    ],
     "scripts": {
         "build": "tsc -p tsconfig.json"
     },
+    "engines": {
+        "node": ">=18.0.0"
+    },
+    "publishConfig": {
+        "access": "public"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/dubeyAditya/devenv-preflight.git"
+    },
+    "license": "MIT",
     "dependencies": {
-        "@devenv-preflight/core": "*",
+        "@dubey_aditya/devenv-preflight-core": "*",
         "@modelcontextprotocol/sdk": "^1.12.0"
     }
 }

@@ -3,7 +3,7 @@
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import { z } from 'zod';
-import { scanEnvironment, loadStack, validateStack, recommendFixes } from '@devenv-preflight/core';
+import { scanEnvironment, loadStack, validateStack, recommendFixes } from '@dubey_aditya/devenv-preflight-core';
 
 const server = new McpServer({
   name: 'devenv-preflight',

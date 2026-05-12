@@ -34,11 +34,11 @@ Preflight collapses this to a single upfront scan that takes under 500 ms.
 
 | Package | Description |
 |---|---|
-| `@devenv-preflight/core` | Detectors, validators, cache, and schema definitions |
-| `@devenv-preflight/cli` | Universal CLI (`scan`, `validate`) |
-| `@devenv-preflight/mcp` | MCP server exposing `scan_environment`, `validate_stack`, `recommend_fixes` |
-| `@devenv-preflight/setup` | Zero-config installer — detects agent and writes MCP config |
-| `@devenv-preflight/skill` | Claude Code / Cursor / Gemini CLI skill (`/devenv-preflight`) |
+| `@dubey_aditya/devenv-preflight-core` | Detectors, validators, cache, and schema definitions |
+| `@dubey_aditya/devenv-preflight-cli` | Universal CLI (`scan`, `validate`) |
+| `@dubey_aditya/devenv-preflight-mcp` | MCP server exposing `scan_environment`, `validate_stack`, `recommend_fixes` |
+| `@dubey_aditya/devenv-preflight-setup` | Zero-config installer — detects agent and writes MCP config |
+| `@dubey_aditya/devenv-preflight-skill` | Claude Code / Cursor / Gemini CLI skill (`/devenv-preflight`) |
 
 ---
 
@@ -192,7 +192,7 @@ Setup auto-writes to `~/.codeium/windsurf/mcp_config.json`. No further configura
 
 ### Other Agents (Cline, Continue.dev, Amp, etc.)
 
-Any agent that supports MCP can use the `@devenv-preflight/mcp` server. Point its MCP config at:
+Any agent that supports MCP can use the `@dubey_aditya/devenv-preflight-mcp` server. Point its MCP config at:
 
 ```
 command: node

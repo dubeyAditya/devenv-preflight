@@ -1,0 +1,39 @@
+name: Publish npm packages
+
+on:
+  push:
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+'
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          registry-url: 'https://registry.npmjs.org'
+
+      - run: npm install
+      - run: npm run build
+
+      - name: Publish npm packages
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.SKILL_NPM_TOKEN }}
+        run: |
+          for pkg in core cli mcp setup; do
+            npm publish --workspace packages/$pkg 2>&1 | tee /tmp/npm-out.txt || {
+              grep -q "EPUBLISHCONFLICT\|E409\|previously published\|already exists" /tmp/npm-out.txt \
+                && echo "$pkg@$(node -p "require('./packages/$pkg/package.json').version") already published, skipping" \
+                || { cat /tmp/npm-out.txt; exit 1; }
+            }
+          done
+
+      - name: Publish skill to github.com/dubeyAditya/preflight
+        env:
+          SKILL_GITHUB_TOKEN: ${{ secrets.SKILL_GITHUB_TOKEN }}
+          CI_COMMIT_TAG: ${{ github.ref_name }}
+        run: bash scripts/publish-skill.sh

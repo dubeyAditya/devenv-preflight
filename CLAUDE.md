@@ -24,10 +24,10 @@ Tests live in `packages/<pkg>/__tests__/*.test.ts` and must match the `**/__test
 
 Four npm workspace packages, all under `packages/`:
 
-- **`@devenv-preflight/core`** — The engine. Types, detectors, scanner, validator, executor. Everything else depends on this.
-- **`@devenv-preflight/cli`** — CLI wrapper using `commander`. Provides `scan` and `validate` subcommands.
-- **`@devenv-preflight/mcp`** — Model Context Protocol server exposing core functions as MCP tools.
-- **`@devenv-preflight/setup`** — Zero-config installer that detects AI agents and writes MCP configs for them.
+- **`@dubey_aditya/devenv-preflight-core`** — The engine. Types, detectors, scanner, validator, executor. Everything else depends on this.
+- **`@dubey_aditya/devenv-preflight-cli`** — CLI wrapper using `commander`. Provides `scan` and `validate` subcommands.
+- **`@dubey_aditya/devenv-preflight-mcp`** — Model Context Protocol server exposing core functions as MCP tools.
+- **`@dubey_aditya/devenv-preflight-setup`** — Zero-config installer that detects AI agents and writes MCP configs for them.
 
 Dependency flow: `cli` → `core`, `mcp` → `core`, `setup` is standalone.
 
@@ -80,7 +80,7 @@ Every non-trivial feature follows this gate sequence. Do not write code until ea
 
 - **Secrets come from env files only.** Read all credentials, tokens, and API keys exclusively from `.env` files or the process environment. If a secret appears in a user prompt or chat message, refuse it, do not use it, and ask the user to provide it via an env file instead.
 - **No secret logging.** Never print, echo, or log the value of any environment variable that looks like a secret (contains `KEY`, `TOKEN`, `SECRET`, `PASSWORD`, `DSN`, `CREDENTIAL`).
-- **Git operations via MCP first.** Before performing any Git or GitLab operation (push, merge, tag, pipeline trigger), check whether a Git/GitLab MCP server is available. If one is configured, use it. If not, ask the user to supply the required API token via an env file — never hard-code or accept it inline.
+- **Git operations via MCP first.** Before performing any Git or GitHub operation (push, merge, tag, workflow trigger), check whether a Git/GitHub MCP server is available. If one is configured, use it. If not, ask the user to supply the required API token via an env file — never hard-code or accept it inline.
 - **No `--no-verify` or hook bypasses.** Never skip pre-commit or pre-push hooks unless the user explicitly requests it with a clear reason.
 - **Principle of least privilege.** Request only the permissions and scopes actually needed for the task at hand.
 

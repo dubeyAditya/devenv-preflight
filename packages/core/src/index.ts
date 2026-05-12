@@ -1,5 +1,5 @@
 /**
- * @devenv-preflight/core
+ * @dubey_aditya/devenv-preflight-core
  *
  * Core library for environment detection, stack validation, and fix recommendations.
  * All public types, functions, and constants are re-exported from this barrel.

@@ -1,15 +1,17 @@
 #!/usr/bin/env bash
 # Publish packages/skill/ contents to github.com/dubeyAditya/preflight.
-# Triggered by the GitLab CI publish-skill job on semver release tags.
+# Triggered by GitHub Actions publish-skill job on semver release tags.
 #
 # Required env vars:
-#   GITHUB_TOKEN  — personal access token with repo write scope
+#   SKILL_GITHUB_TOKEN  — personal access token with repo write scope for dubeyAditya/preflight
 # Optional env vars:
-#   CI_COMMIT_TAG — set automatically by GitLab CI on tag pipelines
+#   CI_COMMIT_TAG — set automatically by GitHub Actions on tag pipelines
 
 set -euo pipefail
 
-GITHUB_REPO="https://${GITHUB_TOKEN}@github.com/dubeyAditya/preflight.git"
+export GIT_TERMINAL_PROMPT=0
+
+GITHUB_REPO="https://x-access-token:${SKILL_GITHUB_TOKEN}@github.com/dubeyAditya/preflight.git"
 SKILL_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/packages/skill"
 TAG="${CI_COMMIT_TAG:-$(git describe --tags --abbrev=0 2>/dev/null || echo "dev")}"
 WORK_DIR=$(mktemp -d)
@@ -48,12 +50,15 @@ else
   echo "Committed skill update for ${TAG}"
 fi
 
+# Ensure remote URL always carries the token (survives clone re-use)
+git remote set-url origin "$GITHUB_REPO"
+
 # Push HEAD to main and the release tag
-git push origin HEAD:main --force-with-lease 2>/dev/null || git push origin HEAD:main
+git push origin HEAD:main --force-with-lease || git push origin HEAD:main
 
 if [[ "$TAG" != "dev" ]]; then
   git tag -f "$TAG"
-  git push origin "$TAG" --force 2>/dev/null || git push origin "$TAG"
+  git push origin "$TAG" --force || git push origin "$TAG"
   echo "Pushed tag ${TAG}"
 fi
 

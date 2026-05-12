@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import { Command } from 'commander';
-import { scanEnvironment, loadStack, validateStack, recommendFixes } from '@devenv-preflight/core';
+import { scanEnvironment, loadStack, validateStack, recommendFixes } from '@dubey_aditya/devenv-preflight-core';
 
 const program = new Command();
 

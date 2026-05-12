@@ -9,7 +9,7 @@ This skill has two parts:
 | Part | What it does | How it's installed |
 |---|---|---|
 | **SKILL.md** | Teaches the AI the scan → validate → fix flow | `npx skills add dubeyAditya/preflight` |
-| **MCP server** | Provides the actual tools (`scan_environment` etc.) | `npx @devenv-preflight/setup` |
+| **MCP server** | Provides the actual tools (`scan_environment` etc.) | `npx @dubey_aditya/devenv-preflight-setup` |
 
 Both parts are required. The skill without the MCP server loads but has no tools to call.
 
@@ -18,7 +18,7 @@ Both parts are required. The skill without the MCP server loads but has no tools
 ### Step 1 — MCP server (tools)
 
 ```bash
-npx @devenv-preflight/setup
+npx @dubey_aditya/devenv-preflight-setup
 ```
 
 This auto-detects your agent environment and writes the MCP config. Run once per machine.
@@ -66,5 +66,6 @@ The MCP `scan_environment` tool supports `allowedTiers` and `permissions` for ri
 
 ## Source
 
-Skill source lives in [GitLab](https://gitlab.com/dubey_aditya/devenv-preflight) under `packages/skill/`.
+Skill source lives in [GitHub](https://github.com/dubeyAditya/devenv-preflight) under `packages/skill/`.
+Source repo: [github.com/dubeyAditya/devenv-preflight](https://github.com/dubeyAditya/devenv-preflight) under `packages/skill/`.
 Published to [github.com/dubeyAditya/preflight](https://github.com/dubeyAditya/preflight) on each release tag.
