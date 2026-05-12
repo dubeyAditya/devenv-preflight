@@ -7,7 +7,7 @@ DevEnv Preflight produces two JSON outputs:
 1. **EnvironmentSnapshot** — a structured snapshot of all detected tools, grouped by category
 2. **CompatibilityReport** — a pass/fail report against a named stack definition, plus a **FixPlan** of remediation suggestions
 
-All outputs include `meta.schemaVersion` (`"0.1.0"`) for forward compatibility.
+All outputs include `meta.schemaVersion` (`"0.2.0"`) for forward compatibility.
 
 ## Type Taxonomy
 
@@ -34,19 +34,26 @@ Controls when a detector runs and what permissions it requires:
 | Tier | Meaning | Phase 1 |
 |---|---|---|
 | `passive` | Read-only, no auth, always safe | All detectors |
-| `contextual` | Reads auth context (e.g. `kubectl config`) | Phase 2+ |
-| `privileged` | Hits remote APIs, requires explicit opt-in | Phase 2+ |
+| `contextual` | Reads auth context (e.g. `kubectl config`, `gh auth status`) | git, npm, docker, kubectl, aws, gh, glab |
+| `privileged` | Live remote check (`git push --dry-run`) | git only |
 
-`scanEnvironment()` defaults to `allowedTiers: ['passive']`. Non-passive detectors must be explicitly enabled via `ScanOptions` and will only run if `permissions[tool] === 'granted'`.
+`scanEnvironment()` defaults to `allowedTiers: ['passive']`. Non-passive detectors must be explicitly enabled via `ScanOptions` and will only run if `permissions[tool] === 'granted'`. Results from both contextual and privileged passes are merged into `snapshot.contexts[toolName]`.
 
 ## Data Flow
 
 ```
 scanEnvironment(options?)
-  └─ filters ALL_DETECTORS by tier + permissions
-  └─ runs detector.detect(platform) in parallel
-  └─ groups results by CATEGORY_TO_FIELD map
-  └─ returns EnvironmentSnapshot
+  └─ check disk cache (skip if noCache or cache miss)
+  └─ passive pass: run detector.detect(platform) in parallel for all non-denied tools
+  │    └─ groups results by CATEGORY_TO_FIELD map
+  └─ contextual pass: run detector.detectContext(platform) for installed tools
+  │    └─ requires: 'contextual' in allowedTiers AND permissions[tool] === 'granted'
+  │    └─ populates snapshot.contexts[toolName]
+  └─ privileged pass: run detector.detectPrivilegedContext(platform) for installed tools
+  │    └─ requires: 'privileged' in allowedTiers AND permissions[tool] === 'granted'
+  │    └─ merges into snapshot.contexts[toolName] (spreads on top of contextual result)
+  └─ write result to disk cache (skip if cacheTTL === 0)
+  └─ return EnvironmentSnapshot
 
 loadStack(stackId)              ← reads stacks/<id>.json from repo root
 validateStack(snapshot, stack)  ← semver comparison per requirement
